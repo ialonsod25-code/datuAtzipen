@@ -19,6 +19,8 @@ public class Kanpina {
     private String dataXml;
     private String metadataXml;
     private String zipFile;
+    private String herriIzena;
+    private String probintziaIzena;
 
     public Kanpina() {}
 
@@ -58,6 +60,10 @@ public class Kanpina {
     public void setMetadataXml(String metadataXml) { this.metadataXml = metadataXml; }
     public String getZipFile() { return zipFile; }
     public void setZipFile(String zipFile) { this.zipFile = zipFile; }
+    public String getHerriIzena() { return herriIzena; }
+    public void setHerriIzena(String herriIzena) { this.herriIzena = herriIzena; }
+    public String getProbintziaIzena() { return probintziaIzena; }
+    public void setProbintziaIzena(String probintziaIzena) { this.probintziaIzena = probintziaIzena; }
 
     @Override
     public String toString() {
