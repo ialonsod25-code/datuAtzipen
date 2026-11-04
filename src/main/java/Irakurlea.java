@@ -58,8 +58,13 @@ public class Irakurlea {
             k.setKategoria(getTexto(e, "category"));
             k.setEdukiera(Integer.parseInt(getTexto(e, "capacity")));
             k.setPostakodea(getTexto(e, "postalCode"));
-            k.setHerriKodea(Integer.parseInt(getTexto(e, "municipalitycode")));
-            k.setProbintziaKodea(Integer.parseInt(getTexto(e, "territorycode")));
+            int probKodea = Integer.parseInt(getTexto(e, "territorycode"));
+            int herriKodea = Integer.parseInt(getTexto(e, "municipalitycode"));
+            // Herri-kodeak ez dira bakarrak probintzien artean (051, 063...): INE kodea erabiltzen da (probintzia*1000 + herria)
+            k.setHerriKodea(probKodea * 1000 + herriKodea);
+            k.setProbintziaIzena(getTexto(e, "territory"));
+            k.setHerriIzena(getTexto(e, "municipality"));
+            k.setProbintziaKodea(probKodea);
             k.setFriendlyUrl(getTexto(e, "friendlyUrl"));
             k.setPhysicalUrl(getTexto(e, "physicalUrl"));
             k.setDataXml(getTexto(e, "dataXML"));
@@ -86,6 +91,42 @@ public class Irakurlea {
                 ps.setString(5, b.getTelefonoa());
                 ps.setString(6, b.getOstatu_mota());
                 ps.setDate(7, java.sql.Date.valueOf(b.getSortzeEguna()));
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    public static void guardarProbintziak(Connection con, List<Kanpina> lista) throws Exception {
+        java.util.Map<Integer, String> probintziak = new java.util.LinkedHashMap<>();
+        for (Kanpina k : lista) {
+            probintziak.putIfAbsent(k.getProbintziaKodea(), k.getProbintziaIzena());
+        }
+        String sql = "MERGE INTO probintziak p USING (SELECT ? AS kodea, ? AS izena FROM dual) s " +
+                     "ON (p.kodea = s.kodea) " +
+                     "WHEN NOT MATCHED THEN INSERT (kodea, izena) VALUES (s.kodea, s.izena)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            for (java.util.Map.Entry<Integer, String> p : probintziak.entrySet()) {
+                ps.setInt(1, p.getKey());
+                ps.setString(2, p.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+    }
+
+    public static void guardarHerriak(Connection con, List<Kanpina> lista) throws Exception {
+        java.util.Map<Integer, String> herriak = new java.util.LinkedHashMap<>();
+        for (Kanpina k : lista) {
+            herriak.putIfAbsent(k.getHerriKodea(), k.getHerriIzena());
+        }
+        String sql = "MERGE INTO herriak h USING (SELECT ? AS kodea, ? AS izena FROM dual) s " +
+                     "ON (h.kodea = s.kodea) " +
+                     "WHEN NOT MATCHED THEN INSERT (kodea, izena) VALUES (s.kodea, s.izena)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            for (java.util.Map.Entry<Integer, String> h : herriak.entrySet()) {
+                ps.setInt(1, h.getKey());
+                ps.setString(2, h.getValue());
                 ps.addBatch();
             }
             ps.executeBatch();
