@@ -1,0 +1,67 @@
+1.-db.ekitaldiak.find({eventType: "Kontzertua", eventLanguages: "Italiera"},{documentName:1,eventStartDate:1, eventTimeTable:1})
+2.- db.ekitaldiak.find({eventTownName:"Santurtzi", eventType:{$in:["Erakusketa","Dantza"]}},{eventStartDate:1, documentName:1,eventLocation:1})
+3.- db.ekitaldiak.find({
+  eventTerritoryName: "Nafarroa",
+  eventStartDate: { $lte: ISODate("2024-12-09T23:59:59.999Z") },
+  eventEndDate:   { $gte: ISODate("2024-12-06T00:00:00.000Z") }
+})
+4.-db.ekitaldiak.find({ documentName: { $regex: "itsasoa", $options: "i" } },{documentName:1}).sort({ documentName: 1 })
+5.- db.eventos.find({eventType: { $in: ["Hitzaldia", "Jardunaldia"] }, eventStartDate: {$gte: ISODate("2024-03-01T00:00:00Z"), $lt:  ISODate("2024-04-01T00:00:00Z")},eventTownName: { $nin: ["Bilbao", "Donostia / San Sebastián"] }}, { _id: 0, documentName: 1, eventStartDate: 1, eventTownName: 1 }
+)
+6.- db.ekitaldiak.countDocuments({ eventType: "Antzerkia", eventTerritoryName: "Bizkaia" })
+7.- db.ekitaldiak.countDocuments({
+  eventType: "Kontzertua",
+  eventTerritoryName: { $nin: ["Bizkaia", ""] }
+})
+8.- db.ekitaldiak.distinct("eventType")
+9.- db.ekitaldiak.aggregate([
+  { $group: { _id: "$eventType", total: { $sum: 1 } } },
+  { $sort: { total: -1 } }
+])
+10.- db.ekitaldiak.insertOne({
+  documentName: "SanturtziFC - PortugaleteFC",
+  eventType: "Bestelakoak",
+  eventStartDate: ISODate("2026-12-20T00:00:00Z"),
+  eventEndDate: ISODate("2026-12-20T00:00:00Z"),
+  eventTerritoryName: "Bizkaia",
+  eventTownName: "Santurtzi",
+  eventTimeTable: "19:00"
+})
+
+11.- db.ekitaldiak.insertOne({
+  documentName: "Zeramika Tailerra",
+  eventType: "Ikastaroak",
+  eventStartDate: ISODate("2026-12-20T00:00:00Z"),
+  eventEndDate: ISODate("2026-12-20T00:00:00Z"),
+  eventTerritoryName: "Bizkaia",
+  eventTownName: "Bilbao",
+  eventTimeTable: "18:30"
+})
+
+  documentName: "Valorant txapelketa",
+  eventType: "Lehiaketa",
+  eventStartDate: ISODate("2026-12-20T00:00:00Z"),
+  eventEndDate: ISODate("2026-12-20T00:00:00Z"),
+  eventTerritoryName: "Bizkaia",
+  eventTownName: "Bermeo",
+  eventTimeTable: "17:00"
+})
+
+12.- db.ekitaldiak.updateOne(
+  { documentName: "Olatz Zugasti", eventTownName: "Hernani" },
+  {
+    $set: {
+      eventStartDate: ISODate("2026-12-15T00:00:00Z"),
+      eventEndDate: ISODate("2026-12-15T00:00:00Z"),
+      eventTimeTable: "19:00"
+    }
+  }
+)
+13.-db.ekitaldiak.deleteMany({ eventWhere: "Arriaga Antzokia" })
+
+
+
+https://github.com/ialonsod25-code/datuAtzipen
+
+
+
