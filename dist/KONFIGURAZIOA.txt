@@ -1,0 +1,5 @@
+url=jdbc:oracle:thin:@//localhost:1521/XEPDB1
+erabiltzailea=EUSKANP
+pasahitza=1234
+bezeroak=3PAG2_E1_bezeroak.xml
+kanpinak=3PAG2_E1_kanpinak.xml
