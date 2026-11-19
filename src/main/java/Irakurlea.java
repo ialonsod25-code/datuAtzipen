@@ -78,7 +78,7 @@ public class Irakurlea {
 
    
     public static void guardarBezeroak(Connection con, List<Bezeroa> lista) throws Exception {
-        String sql = "INSERT INTO BEZEROAK " +
+        String sql = "INSERT /*+ IGNORE_ROW_ON_DUPKEY_INDEX(BEZEROAK(id)) */ INTO BEZEROAK " +
                      "(id, izena, abizenak, emaila, telefonoa, ostatu_mota, sortze_eguna) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -134,7 +134,7 @@ public class Irakurlea {
     }
 
     public static void guardarKanpinak(Connection con, List<Kanpina> lista) throws Exception {
-        String sql = "INSERT INTO kanpinak (kodea, izena, deskribapena, kokalekua, telefonoa, " +
+        String sql = "INSERT /*+ IGNORE_ROW_ON_DUPKEY_INDEX(kanpinak(kodea)) */ INTO kanpinak (kodea, izena, deskribapena, kokalekua, telefonoa, " +
                      "helbidea, emaila, webgunea, kategoria, edukiera, postakodea, herri_kodea, " +
                      "probintzia_kodea, friendly_url, physical_url, data_xml, metadata_xml, zip_file) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
